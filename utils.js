@@ -1,7 +1,7 @@
 import axios from 'axios';
 import urlJoin from 'url-join';
 
-const URL_BACKEND = 'https://098fd6cb.ngrok.io';
+const URL_BACKEND = 'https://visio-portal.telecomsante.com/api';
 const URL_BACKEND_FETCH_VISIO_INFOS = urlJoin(URL_BACKEND, 'visio-infos');
 const URL_BACKEND_FETCH_ROOM_AND_JWT = urlJoin(URL_BACKEND, 'mobile-room');
 export const DEFAULT_VISIO_URL = 'https://visio-server.telecomsante.com';
