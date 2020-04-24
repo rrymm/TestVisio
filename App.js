@@ -1,53 +1,76 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import JitsiMeet, { JitsiMeetView } from 'react-native-jitsi-meet';
+import { fetchVisioInformations, fetchRoomAndJwtFromCode, DEFAULT_VISIO_URL } from './utils';
+import urlJoin from 'url-join';
+import DialogInput from 'react-native-dialog-input';
+import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 
 function App() {
+  const [isDialogVisible, setDialogVisible] = useState(false);
+  const [urlVisio, setUrlVisio] = useState(DEFAULT_VISIO_URL);
+
+  const submitCode = (code) => {
+    setDialogVisible(false);
+    fetchRoomAndJwtFromCode(code)
+    .then(({room, jwt}) => {
+      setTimeout(() => {
+        JitsiMeet.call(urlJoin(urlVisio, room, `?jwt=${jwt}`), {});
+      }, 500);
+    })
+    .catch(err => {
+      console.log(err);
+      showMessage({
+        message: `Le code ${code} est associé à aucune salle de visio`,
+        type: "warning"
+      });
+      setTimeout(() => {
+        hideMessage();
+        setDialogVisible(true);
+      }, 6000);
+    })
+  }
+
+  const cancelDialog = () => setDialogVisible(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      const url = 'https://meet.jit.si/testdamienld';
-      const userInfo = {
-        displayName: 'User',
-        email: 'user@example.com',
-        avatar: 'https:/gravatar.com/avatar/abc123',
-      };
-      JitsiMeet.call(url, userInfo);
-      /* Você também pode usar o JitsiMeet.audioCall (url) para chamadas apenas de áudio */
-      /* Você pode terminar programaticamente a chamada com JitsiMeet.endCall () */
-    }, 1000);
-  }, [])
+    fetchVisioInformations()
+    .then(url => {
+      setUrlVisio(url);
+      setDialogVisible(true);
+    })
+  }, []);
 
   useEffect(() => {
     return () => {
       JitsiMeet.endCall();
     };
   });
-
-  function onConferenceTerminated(nativeEvent) {
-    /* Conference terminated event */
-    console.log(nativeEvent)
-  }
-
-  function onConferenceJoined(nativeEvent) {
-    /* Conference joined event */
-    console.log(nativeEvent)
-  }
-
-  function onConferenceWillJoin(nativeEvent) {
-    /* Conference will join event */
-    console.log(nativeEvent)
-  }
   return (
-    <JitsiMeetView
-      onConferenceTerminated={e => onConferenceTerminated(e)}
-      onConferenceJoined={e => onConferenceJoined(e)}
-      onConferenceWillJoin={e => onConferenceWillJoin(e)}
-      style={{
-        flex: 1,
-        height: '100%',
-        width: '100%',
-      }}
-    />
+    <>
+      <JitsiMeetView
+        onConferenceTerminated={() => setDialogVisible(true)}
+        onConferenceJoined={() => {}}
+        onConferenceWillJoin={() => {}}
+        style={{
+          flex: 1,
+          height: '100%',
+          width: '100%',
+        }}
+      />
+      <DialogInput
+        isDialogVisible={isDialogVisible}
+        title={"Code salle de visio"}
+        message={"Veuillez saisir le code fourni dans votre invitation"}
+        hintInput={"Code"}
+        submitInput={submitCode}
+        closeDialog={cancelDialog}
+        textInputProps={{
+          keyboardType: 'numeric'
+        }}
+        cancelText={"Annuler"}
+        submitText={"Valider"} />
+        <FlashMessage duration={6000} onPress={() => setDialogVisible(true)} position="bottom" />
+    </>
   )
 }
 export default App;
