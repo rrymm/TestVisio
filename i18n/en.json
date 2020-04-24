@@ -1,0 +1,8 @@
+{
+  "cancel": "Cancel",
+  "descriptionAskRoom": "Please type the code provided in the invitation.",
+  "errorNoRoomForCode": "No room is associated to the code {code}.",
+  "hintCode": "Code",
+  "titleAskRoom": "Room code",
+  "validate": "Validate"
+}

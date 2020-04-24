@@ -4,10 +4,12 @@ import { fetchVisioInformations, fetchRoomAndJwtFromCode, DEFAULT_VISIO_URL } fr
 import urlJoin from 'url-join';
 import DialogInput from 'react-native-dialog-input';
 import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
+import { useIntl } from 'react-intl';
 
 function App() {
   const [isDialogVisible, setDialogVisible] = useState(false);
   const [urlVisio, setUrlVisio] = useState(DEFAULT_VISIO_URL);
+  const { formatMessage: f } = useIntl();
 
   const submitCode = (code) => {
     setDialogVisible(false);
@@ -20,7 +22,7 @@ function App() {
     .catch(err => {
       console.log(err);
       showMessage({
-        message: `Le code ${code} est associé à aucune salle de visio`,
+        message: f({id: 'errorNoRoomForCode'}, { code }),
         type: "warning"
       });
       setTimeout(() => {
@@ -59,16 +61,16 @@ function App() {
       />
       <DialogInput
         isDialogVisible={isDialogVisible}
-        title={"Code salle de visio"}
-        message={"Veuillez saisir le code fourni dans votre invitation"}
-        hintInput={"Code"}
+        title={f({id: 'titleAskRoom'})}
+        message={f({id: 'descriptionAskRoom'})}
+        hintInput={f({id: 'hintCode'})}
         submitInput={submitCode}
         closeDialog={cancelDialog}
         textInputProps={{
           keyboardType: 'numeric'
         }}
-        cancelText={"Annuler"}
-        submitText={"Valider"} />
+        cancelText={f({id: 'cancel'})}
+        submitText={f({id: 'validate'})} />
         <FlashMessage duration={6000} onPress={() => setDialogVisible(true)} position="bottom" />
     </>
   )

@@ -1,0 +1,8 @@
+{
+  "cancel": "Annuler",
+  "descriptionAskRoom": "Veuillez saisir le code fourni dans votre invitation.",
+  "errorNoRoomForCode": "Le code {code} est associé à aucune salle de visio.",
+  "hintCode": "Code",
+  "titleAskRoom": "Code salle de visio",
+  "validate": "Valider"
+}

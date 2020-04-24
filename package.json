@@ -7,11 +7,16 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "check": "xo && npm audit",
+    "fix": "xo --fix"
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "date-time-format-timezone": "1.0.22",
+    "intl": "1.2.5",
     "react": "16.11.0",
+    "react-intl": "4.5.0",
     "react-native": "0.62.2",
     "react-native-dialog-input": "^1.0.7",
     "react-native-flash-message": "^0.1.15",
@@ -24,11 +29,37 @@
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-jest": "^24.9.0",
     "eslint": "^6.5.1",
+    "eslint-config-xo-react": "0.23.0",
+    "husky": "4.2.5",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
-    "react-test-renderer": "16.11.0"
+    "react-test-renderer": "16.11.0",
+    "xo": "0.28.1"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "xo": {
+    "extends": "xo-react",
+    "ignore": [
+      "/build",
+      "/node_modules",
+      "src/serviceWorker.js",
+      "src/setupTests.js"
+    ],
+    "global": [
+      "window",
+      "navigator",
+      "document"
+    ],
+    "rules": {
+      "import/no-unassigned-import": "off",
+      "unicorn/filename-case": "off",
+      "react/no-unescaped-entities": "off",
+      "react/no-array-index-key": "off",
+      "no-case-declarations": "off",
+      "import/extensions": "off",
+      "complexity": "off"
+    }
   }
 }
